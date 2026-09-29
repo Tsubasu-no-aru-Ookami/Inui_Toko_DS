@@ -1,0 +1,19 @@
+{
+  "name": "discord-voice-overlay",
+  "version": "1.0.0",
+  "description": "Custom Discord voice overlay like Inui Toko",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "start-python": "python discord_ws.py",
+    "watch-python": "nodemon --exec python discord_ws.py"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "electron": "^30.5.1",
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "ws": "^8.18.3"
+  }
+}

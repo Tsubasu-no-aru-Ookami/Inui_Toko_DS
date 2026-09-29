@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+      body {
+        margin: 0;
+        background: transparent;
+        font-family: sans-serif;
+      }
+
+      .user {
+        display: flex;
+        align-items: center;
+        margin: 4px;              /* расстояние между строками */
+        padding: 0px 0px;        /* внутренние отступы */
+      }
+
+      .avatar {
+        width: 40px;              /* размер аватарки */
+        height: 40px;
+        border-radius: 6px;      /* скруглённые квадраты */
+        margin-right: 1px;       /* отступ между аватаркой и текстом */
+        filter: brightness(0.4);
+        transition: all 0.3s ease;
+      }
+  
+      .speaking .avatar {
+        filter: brightness(1);
+        border: 2px solid #00ff62;
+        animation: float 2s ease-in-out infinite;
+      }
+  
+      .name {
+        background: rgba(0, 0, 0, 0.792);
+        padding: 4px 8px;         /* внутренние отступы имени */
+        margin-left: 8px;
+        border-radius: 2px;
+        color: white;
+        font-size: 12px;
+      }
+  
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-4px); }
+      }
+    </style>
+</head>
+<body>
+    <div id="status">Disconnected</div>
+    <div id="users"></div>
+
+    <script>
+        const { ipcRenderer } = require('electron')
+        
+        ipcRenderer.on('status', (_, status) => {
+            const elem = document.getElementById('status')
+            elem.textContent = status === 'connected' 
+                ? 'Connected to voice channel' 
+                : 'Disconnected from server'
+            elem.style.color = status === 'connected' ? 'lightgreen' : 'red'
+        })
+
+        ipcRenderer.on('update', (_, users) => {
+            const container = document.getElementById('users')
+            container.innerHTML = users ? users.map(user => `
+                <div class="user ${user.speaking ? 'speaking' : ''}">
+                    ${user.name} ${user.speaking ? '🎤' : ''}
+                </div>
+            `).join('') : '<div>No users in voice channel</div>'
+        })
+    </script>
+</body>
+</html>
